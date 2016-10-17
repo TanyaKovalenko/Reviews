@@ -12,7 +12,8 @@ class YandexSpider(scrapy.Spider):
 		for page_inx in range(1, 5508):
 			if 'https://market.yandex.ru/shop/17436/reviews?page_num=' + str(page_inx) not in self.visited_urls:
 				urls.add('https://market.yandex.ru/shop/17436/reviews?page_num=' + str(page_inx))
-			#urls.add('https://market.yandex.ru/shop/18063/reviews?page_num=' + str(page_inx))
+			#if 'https://market.yandex.ru/shop/18063/reviews?page_num=' + str(page_inx) not in self.visited_urls:
+				#urls.add('https://market.yandex.ru/shop/18063/reviews?page_num=' + str(page_inx))
 
 		urls_list = list(urls)
 	
@@ -23,7 +24,7 @@ class YandexSpider(scrapy.Spider):
         	super(YandexSpider, self).__init__(*args, **kwargs)
 		
 		self.visited_urls = set()
-		
+		#with open('yandex_ulmart_visited_urls', 'r') as fin:
 		with open('yandex_sitilink_visited_urls', 'r') as fin:
             		for line in fin:
                 		url = line.strip()
@@ -32,7 +33,7 @@ class YandexSpider(scrapy.Spider):
 	def parse(self, response):
 		if response.url in self.visited_urls:
             		return
-	        
+	        #filename = 'ulmart_result.csv'
 		filename = 'sitilink_result.csv'
 		
 		no_review_text = [sel.extract() for sel in response.xpath('//dd[re:test(@class, "n-product-default-offer__no-modifications_text")]')]
@@ -43,6 +44,7 @@ class YandexSpider(scrapy.Spider):
         	comments = [sel.extract() for sel in response.xpath('//div[re:test(@class, "product-review-item ")]')]
 		
 		if len(comments) != 0:
+			 #with open('yandex_ulmart_visited_urls', 'a') as f:
 			 with open('yandex_sitilink_visited_urls', 'a') as f:
                          	f.write(response.url + '\n')
         	
